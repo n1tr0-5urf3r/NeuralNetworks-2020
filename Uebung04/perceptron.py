@@ -1,5 +1,5 @@
 """
-Group: ---> (FILL IN YOUR NAMES) <---
+Group: ---> Maximilian Bertsch, Fabian Ihle <---
 
 
 Your tasks:
@@ -52,11 +52,10 @@ class Perceptron:
         :param input_: input vector
         :return: network output (1 or 0)
         """
-
-        inputAll = input_.sum()
-
-        # TODO
+        inputAll = np.dot(input_, self._weights).sum()
         # Sum of all input vectors > threshold? 1 else 0
+        if inputAll + self._bias_weight >= 0:
+            return 1
         return 0
 
     def _train_pattern(self, input_: np.matrix, target: int, lr: float):
@@ -69,11 +68,18 @@ class Perceptron:
         :param lr: the learning rate of the perceptron learning rule
         """
 
-        # TODO
         result = self.predict(input_)
         if result != target:
-            # Adjust weights and bias with delta rule
-            pass
+            # Calculate delta w_ji
+            # We used the delta learning rule from NN 07 Backpropagation, Slide 9 "online version of the Delta rule" for single layer networks
+            delta_wji = lr * input_ * (target - result)
+            # Convert matrix input to ndarray
+            delta_wji = np.array(delta_wji.T)[0]
+
+            # Use delta bias weight as an on neuron and alter it
+            delta_bias_wji = lr * 1 * (target - result)
+            self._bias_weight += delta_bias_wji
+            self._weights += delta_wji
         pass
 
     def train(self, input_vectors: np.matrix, targets: np.array, epochs: int, lr: float) -> list:
@@ -85,9 +91,15 @@ class Perceptron:
         :param targets: target outputs. targets[0] is the  desired output
                 for the first training vector.
         :param epochs: Number of epochs. 
-        :param lr: the learning rate of the percepton learning rule
+        :param lr: the learning rate of the perceptron learning rule
         :return: average error rate for every epoch
         """
+
+        iterations = 0
+        for i in range(0, epochs):
+            for j in range(0, input_vectors.shape[0]):
+                iterations += 1
+                self._train_pattern(input_vectors[j, :], targets[j], lr)
 
         # TODO
         return [0]*iterations
