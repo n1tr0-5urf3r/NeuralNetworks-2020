@@ -52,7 +52,7 @@ class Perceptron:
         :param input_: input vector
         :return: network output (1 or 0)
         """
-        inputAll = np.dot(input_, self._weights).sum()
+        inputAll = np.dot(input_, self._weights)
         # Sum of all input vectors > threshold? 1 else 0
         if inputAll + self._bias_weight >= 0:
             return 1
@@ -73,13 +73,14 @@ class Perceptron:
             # Calculate delta w_ji
             # We used the delta learning rule from NN 07 Backpropagation, Slide 9 "online version of the Delta rule" for single layer networks
             delta_wji = lr * input_ * (target - result)
-            # Convert matrix input to ndarray
-            delta_wji = np.array(delta_wji.T)[0]
+            # Convert ndarray input to matrix
+            self._weights_matrix = np.asmatrix(self._weights)
+            #delta_wji = np.array(delta_wji.T)[0]
 
             # Use delta bias weight as an on neuron and alter it
             delta_bias_wji = lr * 1 * (target - result)
             self._bias_weight += delta_bias_wji
-            self._weights += delta_wji
+            self._weights_matrix += delta_wji
         pass
 
     def train(self, input_vectors: np.matrix, targets: np.array, epochs: int, lr: float) -> list:
@@ -95,14 +96,21 @@ class Perceptron:
         :return: average error rate for every epoch
         """
 
-        iterations = 0
+        error_rates = []
         for i in range(0, epochs):
+            iterations = 0
+            errorcount = 0
             for j in range(0, input_vectors.shape[0]):
                 iterations += 1
                 self._train_pattern(input_vectors[j, :], targets[j], lr)
+                result = self.predict(input_vectors[j, :])
+                ep = 0.5 * (targets[j] - result) ** 2
+                if result != targets[j]:
+                    errorcount += ep
+                error_rates.append(errorcount/iterations)
 
-        # TODO
-        return [0]*iterations
+        #return [0]*iterations
+        return error_rates
 
 
 def read_double_array(filename) -> np.array:

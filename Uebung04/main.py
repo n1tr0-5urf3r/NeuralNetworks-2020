@@ -70,6 +70,6 @@ if __name__ == "__main__":
 
     # Please uncomment the following lines to check learning and epoch relationship for different combinations
     calculate_relationship_table(["","aImpliesbinput.txt","aImpliesboutput.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
-    # calculate_relationship_table(["","xnorinput.txt","xnoroutput.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
-    # calculate_relationship_table(["","test1input.txt","test1output.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
+    calculate_relationship_table(["","xnorinput.txt","xnoroutput.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
+    calculate_relationship_table(["","test1input.txt","test1output.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
 
