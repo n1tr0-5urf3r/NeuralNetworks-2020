@@ -1,5 +1,5 @@
 """
-Group: ---> (FILL IN YOUR NAMES) <---
+Group: Fabian Ihle, Maximilian Bertsch
 
 
 Your tasks:
@@ -84,7 +84,7 @@ class Perceptron:
                 input_vectors[0,:] is the first training vector, input_vectors[1,:] the second...
         :param targets: target outputs. targets[0] is the  desired output
                 for the first training vector.
-        :param epochs: Number of epochs. 
+        :param epochs: Number of epochs.
         :param lr: the learning rate of the percepton learning rule
         :return: average error rate for every epoch
         """
