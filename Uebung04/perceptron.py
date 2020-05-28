@@ -19,6 +19,7 @@ import argparse
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+import random
 
 
 class Perceptron:
@@ -36,8 +37,11 @@ class Perceptron:
         self._dimension = dimension
 
         # random initialization of weights between -0.1 and 0.1:
-        # TODO
         self._weights = np.zeros([self._dimension])
+
+        # Initialize with random values between -0.1 and 0.1
+        for i, w in enumerate(self._weights):
+            self._weights[i] = random.uniform(-0.1, 0.1)
 
         # Bias that has to be added to the activation.
         self._bias_weight = -1.0
@@ -49,7 +53,10 @@ class Perceptron:
         :return: network output (1 or 0)
         """
 
+        inputAll = input_.sum()
+
         # TODO
+        # Sum of all input vectors > threshold? 1 else 0
         return 0
 
     def _train_pattern(self, input_: np.matrix, target: int, lr: float):
@@ -59,10 +66,14 @@ class Perceptron:
 
         :param input: input vector
         :param target: desired output value (1 or 0)
-        :param lr: the learning rate of the percepton learning rule
+        :param lr: the learning rate of the perceptron learning rule
         """
 
         # TODO
+        result = self.predict(input_)
+        if result != target:
+            # Adjust weights and bias with delta rule
+            pass
         pass
 
     def train(self, input_vectors: np.matrix, targets: np.array, epochs: int, lr: float) -> list:
