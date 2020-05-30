@@ -107,7 +107,7 @@ class Perceptron:
                 ep = 0.5 * (targets[j] - result) ** 2
                 if result != targets[j]:
                     errorcount += ep
-                error_rates.append(errorcount/iterations)
+            error_rates.append(errorcount/iterations)
 
         #return [0]*iterations
         return error_rates
