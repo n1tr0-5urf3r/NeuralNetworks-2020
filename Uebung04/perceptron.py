@@ -104,9 +104,8 @@ class Perceptron:
                 iterations += 1
                 self._train_pattern(input_vectors[j, :], targets[j], lr)
                 result = self.predict(input_vectors[j, :])
-                ep = 0.5 * (targets[j] - result) ** 2
                 if result != targets[j]:
-                    errorcount += ep
+                    errorcount += 1
             error_rates.append(errorcount/iterations)
 
         #return [0]*iterations
