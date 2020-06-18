@@ -1,6 +1,6 @@
 
 """
-Group: ---> (Fill in your names) <---
+Group: ---> Maximilian Bertsch, Fabian IHle <---
 
 Your tasks:
     Fill in your names.
@@ -11,7 +11,7 @@ run your program with
     python3 MultiLayerANN.py --key1=value1 --key2=value2 ...
 e.g.
     python3 MultiLayerANN.py --epochs=1000 --inputs='digits-input.txt' --outputs='digits-target.txt' --activation='tanh'
-
+W
 Key/value pairs that are unchanged use their respective defaults.
 """
 import matplotlib
