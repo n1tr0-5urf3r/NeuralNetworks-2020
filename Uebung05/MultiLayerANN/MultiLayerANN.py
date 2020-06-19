@@ -126,26 +126,18 @@ class MultiLayerANN:
         for i in range(0, len(self._layer_dimensions) - 1):
             # Add bias neuron to input vector
             input_ = np.append(input_, self.BIAS_ACTIVATION)
-            if i == 0:
-                # Use identity function for the input layer
-                o_l = np.dot(input_, self._weights[i])
 
-                debugDimensions()
+            # Output of current layer with activation function
+            o_l = self._act_fun.f(np.dot(input_, self._weights[i]))
 
-                # Output of current layer is now input for next layer
-                input_ = o_l
-                o.append(o_l)
-            else:
-                # Output of current layer with activation function
-                o_l = self._act_fun.f(np.dot(input_, self._weights[i]))
+            debugDimensions()
 
-                debugDimensions()
-
-                # Output of current layer is now input for next layer
-                input_ = o_l
-                o.append(o_l)
+            # Output of current layer is now input for next layer
+            input_ = o_l
+            o.append(o_l)
 
         # Return the last element of our output vectors, this is the last layer (output layer)
+        print(len(o))
         return o[-1]
 
     def _train_pattern(self, input_: np.array, target: np.array, lr: float, momentum: float, decay: float):
