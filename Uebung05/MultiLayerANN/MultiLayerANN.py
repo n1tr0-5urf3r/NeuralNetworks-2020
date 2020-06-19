@@ -1,5 +1,5 @@
 """
-Group: ---> Maximilian Bertsch, Fabian IHle <---
+Group: ---> Maximilian Bertsch, Fabian Ihle <---
 
 Your tasks:
     Fill in your names.
@@ -20,7 +20,6 @@ matplotlib.use('TkAgg')
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 
 np.random.seed(100)
 
@@ -29,7 +28,7 @@ class Sigmoid:
     @staticmethod
     def f(x: np.array) -> np.array:
         """ the sigmoid function """
-        sigmoid = lambda y: 1 / (1 + math.exp(-y))
+        sigmoid = lambda y: 1 / (1 + np.exp(-y))
         return sigmoid(x)
 
     @staticmethod
@@ -42,7 +41,7 @@ class TanH:
     @staticmethod
     def f(x: np.array) -> np.array:
         """ the tanh function """
-        tanh = lambda y: (math.exp(y) - math.exp(-y)) / (math.exp(y) + math.exp(-y))
+        tanh = lambda y: (np.exp(y) - np.exp(-y)) / (np.exp(y) + np.exp(-y))
         return tanh(x)
 
     @staticmethod
@@ -110,9 +109,11 @@ class MultiLayerANN:
         :param input_: input vector
         :return: activation of the output layer
         """
+        # TODO consider BIAS neuron
 
-        # TODO
-        return []
+        output = self._act_fun.f(input_)
+        print(output)
+        return output
 
     def _train_pattern(self, input_: np.array, target: np.array, lr: float, momentum: float, decay: float):
         """
