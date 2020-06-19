@@ -1,4 +1,3 @@
-
 """
 Group: ---> Maximilian Bertsch, Fabian IHle <---
 
@@ -15,6 +14,7 @@ W
 Key/value pairs that are unchanged use their respective defaults.
 """
 import matplotlib
+
 matplotlib.use('TkAgg')
 
 import argparse
@@ -24,17 +24,18 @@ import math
 
 np.random.seed(100)
 
+
 class Sigmoid:
     @staticmethod
     def f(x: np.array) -> np.array:
         """ the sigmoid function """
-        sigmoid = lambda y: 1/(1+math.exp(-y))
+        sigmoid = lambda y: 1 / (1 + math.exp(-y))
         return sigmoid(x)
-    
+
     @staticmethod
     def d(x: np.array) -> np.array:
         """ the first derivative """
-        return Sigmoid.f(x) * (1-Sigmoid.f(x))
+        return Sigmoid.f(x) * (1 - Sigmoid.f(x))
 
 
 class TanH:
@@ -79,28 +80,28 @@ class MultiLayerANN:
         # Type: list of np.arrays. The activation value for each non input_ neuron,
         # each list element represents one layer
         self._activations = []
-        
+
         # Type: list of np.arrays. The back propagation delta value for each non input_ neuron,
         # each list element represents one layer
         self._deltas = []
-        
+
         # Type: list of np.arrays. List of all weight matrices. 
         # Weight matrices are randomly initialized between -1 and 1
         self._weights = []
-        
+
         # Type: list of np.arrays. List of all delta weight matrices. 
         # They are added to the corresponding weight matrices after each training step
         self._weights_deltas = []
 
         for i in range(len(self._layer_dimensions[1:])):
-            layer_size, prev_layer_size = self._layer_dimensions[i+1], self._layer_dimensions[i]
+            layer_size, prev_layer_size = self._layer_dimensions[i + 1], self._layer_dimensions[i]
             self._net_inputs.append(np.zeros(layer_size))
             self._activations.append(np.zeros(layer_size))
             self._deltas.append(np.zeros(layer_size))
 
             # we use +1 to consider the bias-neurons
             # weights are chosen randomly (uniform distribution) between -1 and 1
-            self._weights.append(np.random.rand(prev_layer_size+1, layer_size) * 2 - 1)
+            self._weights.append(np.random.rand(prev_layer_size + 1, layer_size) * 2 - 1)
             self._weights_deltas.append(np.zeros([prev_layer_size + 1, layer_size]))
 
     def _predict(self, input_: np.array) -> np.array:
@@ -129,16 +130,20 @@ class MultiLayerANN:
         # - then compute hidden layer deltas, consider that no delta is needed for the bias neuron
         #   Note: self._deltas[0:-1] = ignore last delta
         for delta, last_delta, weights, net_inputs in zip(reversed(self._deltas[0:-1]), reversed(self._deltas[1:]),
-                                                          reversed(self._weights[1:]), reversed(self._net_inputs[0:-1])):
+                                                          reversed(self._weights[1:]),
+                                                          reversed(self._net_inputs[0:-1])):
             pass
 
         # TODO compute weight update
         # add input layer activations to activations and ignore output layer activations
         act_with_input = [input_] + self._activations[0:-1]
-        for weights_layer, weight_deltas_layer, activation_layer, delta_layer in zip(self._weights, self._weights_deltas, act_with_input, self._deltas):
+        for weights_layer, weight_deltas_layer, activation_layer, delta_layer in zip(self._weights,
+                                                                                     self._weights_deltas,
+                                                                                     act_with_input, self._deltas):
             pass
 
-    def train(self, inputs: [np.array], targets: [np.array], epochs: int, lr: float, momentum: float, decay: float) -> list:
+    def train(self, inputs: [np.array], targets: [np.array], epochs: int, lr: float, momentum: float,
+              decay: float) -> list:
         """
         trains a set of input_ vectors. The error for each epoch gets printed out.
         In addition, the amount of correctly classiefied input_ vectors in printed
@@ -153,11 +158,11 @@ class MultiLayerANN:
         errors = []
         for epoch in range(epochs):
             error = 0
-            for input_, target in zip(inputs,targets):
+            for input_, target in zip(inputs, targets):
                 self._train_pattern(input_, target, lr, momentum, decay)
             for input_, target in zip(inputs, targets):
                 output = self._predict(input_)
-                d = (target-output)
+                d = (target - output)
                 error += np.dot(d.T, d) / len(d)
             error /= len(inputs)
             errors.append(error)
@@ -170,7 +175,7 @@ class MultiLayerANN:
         for input_, target in zip(inputs, targets):
             # for one output use a threshold with 0.5
             if isinstance(target, float):
-                correct_predictions += 1 if np.abs(self._predict(input_)-target) < 0.5 else 0
+                correct_predictions += 1 if np.abs(self._predict(input_) - target) < 0.5 else 0
 
             # for multiple outputs choose the outputs with the highest value as predicted class
             else:
@@ -227,4 +232,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
