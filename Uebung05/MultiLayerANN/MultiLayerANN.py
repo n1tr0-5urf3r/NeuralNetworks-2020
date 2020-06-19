@@ -121,9 +121,17 @@ class MultiLayerANN:
         o = []
 
         # self._layer_dimensions consists of a tuple of length of vector per layer
-        # Calculate outputs for each layer
 
-        for i in range(0, len(self._layer_dimensions) - 1):
+        # Calculate the first (input) layer with identity function and its weights
+        input_ = np.append(input_, self.BIAS_ACTIVATION)
+        o_l = np.dot(input_, self._weights[0])
+        o.append(o_l)
+        input_ = o_l
+
+        # Calculate outputs for each hidden
+        # Start from i=1 as we already calculated the input layer,
+        # Go 'till dimensions - 1 as the output layer will be calculated outside separatly
+        for i in range(1, len(self._layer_dimensions) - 1):
             # Add bias neuron to input vector
             input_ = np.append(input_, self.BIAS_ACTIVATION)
 
@@ -136,9 +144,8 @@ class MultiLayerANN:
             input_ = o_l
             o.append(o_l)
 
-        # Return the last element of our output vectors, this is the last layer (output layer)
-        print(len(o))
-        return o[-1]
+        # Calculate the activation function of our output layer and return it
+        return self._act_fun.f(o[-1])
 
     def _train_pattern(self, input_: np.array, target: np.array, lr: float, momentum: float, decay: float):
         """
