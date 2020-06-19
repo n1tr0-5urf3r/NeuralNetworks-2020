@@ -20,6 +20,7 @@ matplotlib.use('TkAgg')
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 np.random.seed(100)
 
@@ -27,28 +28,26 @@ class Sigmoid:
     @staticmethod
     def f(x: np.array) -> np.array:
         """ the sigmoid function """
-        # TODO
-        return np.zeros_like(x)
+        sigmoid = lambda y: 1/(1+math.exp(-y))
+        return sigmoid(x)
     
     @staticmethod
     def d(x: np.array) -> np.array:
         """ the first derivative """
-        # TODO
-        return np.zeros_like(x)
+        return Sigmoid.f(x) * (1-Sigmoid.f(x))
 
 
 class TanH:
     @staticmethod
     def f(x: np.array) -> np.array:
         """ the tanh function """
-        # TODO
-        return np.zeros_like(x)
+        tanh = lambda y: (math.exp(y) - math.exp(-y)) / (math.exp(y) + math.exp(-y))
+        return tanh(x)
 
     @staticmethod
     def d(x: np.array) -> np.array:
         """ the first derivative """
-        # TODO
-        return np.zeros_like(x)
+        return 1 - TanH.f(x) ** TanH.f(x)
 
 
 class MultiLayerANN:
