@@ -47,7 +47,7 @@ class TanH:
     @staticmethod
     def d(x: np.array) -> np.array:
         """ the first derivative """
-        return 1 - TanH.f(x) ** TanH.f(x)
+        return 1 - (TanH.f(x) ** 2)
 
 
 class MultiLayerANN:
@@ -110,42 +110,26 @@ class MultiLayerANN:
         :return: activation of the output layer
         """
 
-        def debugDimensions():
-            """ This is to debug our dimensions"""
-            print("I.Weights: " + str(len(self._weights[i])))
-            print("I.Input vector: " + str(len(input_)))
-            print("I.Output vector: " + str(len(o_l)))
-            print("--------")
-
-        # Holds a list of all output vectors per layer
-        o = []
-
         # self._layer_dimensions consists of a tuple of length of vector per layer
 
         # Calculate the first (input) layer with identity function and its weights
         input_ = np.append(input_, self.BIAS_ACTIVATION)
-        o_l = np.dot(input_, self._weights[0])
-        o.append(o_l)
-        input_ = o_l
+        self._net_inputs[0] = np.dot(input_, self._weights[0])
 
-        # Calculate outputs for each hidden
+        # Calculate outputs for each hidden layer
         # Start from i=1 as we already calculated the input layer,
         # Go 'till dimensions - 1 as the output layer will be calculated outside separatly
         for i in range(1, len(self._layer_dimensions) - 1):
             # Add bias neuron to input vector
-            input_ = np.append(input_, self.BIAS_ACTIVATION)
-
-            # Output of current layer with activation function
-            o_l = self._act_fun.f(np.dot(input_, self._weights[i]))
-
-            debugDimensions()
+            self._net_inputs[i-1] = np.append(self._net_inputs[i-1], self.BIAS_ACTIVATION)
+            self._net_inputs[i] = np.dot(self._net_inputs[i-1], self._weights[i])
 
             # Output of current layer is now input for next layer
-            input_ = o_l
-            o.append(o_l)
+            self._activations[i] = self._act_fun.f(self._net_inputs[i])
 
         # Calculate the activation function of our output layer and return it
-        return self._act_fun.f(o[-1])
+        self._activations[-1] = self._act_fun.f(self._activations[-1])
+        return self._activations[-1]
 
     def _train_pattern(self, input_: np.array, target: np.array, lr: float, momentum: float, decay: float):
         """
@@ -158,10 +142,13 @@ class MultiLayerANN:
         """
         self._predict(input_)
 
-        # TODO compute deltas
         # - first compute output layer deltas
+        self._deltas[-1] = self._act_fun.d(self._net_inputs[-1]) * (target - self._activations[-1])
         # - then compute hidden layer deltas, consider that no delta is needed for the bias neuron
         #   Note: self._deltas[0:-1] = ignore last delta
+        for i in range(1, len(self._layer_dimensions) - 1):
+            self._deltas[-i-1] = self._act_fun.d(self._net_inputs[-i-1])[0:-1] * (self._deltas[-i].T * self._weights[-i])[0:-1].T
+
         for delta, last_delta, weights, net_inputs in zip(reversed(self._deltas[0:-1]), reversed(self._deltas[1:]),
                                                           reversed(self._weights[1:]),
                                                           reversed(self._net_inputs[0:-1])):
