@@ -109,11 +109,44 @@ class MultiLayerANN:
         :param input_: input vector
         :return: activation of the output layer
         """
-        # TODO consider BIAS neuron
 
-        output = self._act_fun.f(input_)
-        print(output)
-        return output
+        def debugDimensions():
+            """ This is to debug our dimensions"""
+            print("I.Weights: " + str(len(self._weights[i])))
+            print("I.Input vector: " + str(len(input_)))
+            print("I.Output vector: " + str(len(o_l)))
+            print("--------")
+
+        # Holds a list of all output vectors per layer
+        o = []
+
+        # self._layer_dimensions consists of a tuple of length of vector per layer
+        # Calculate outputs for each layer
+
+        for i in range(0, len(self._layer_dimensions) - 1):
+            # Add bias neuron to input vector
+            input_ = np.append(input_, self.BIAS_ACTIVATION)
+            if i == 0:
+                # Use identity function for the input layer
+                o_l = np.dot(input_, self._weights[i])
+
+                debugDimensions()
+
+                # Output of current layer is now input for next layer
+                input_ = o_l
+                o.append(o_l)
+            else:
+                # Output of current layer with activation function
+                o_l = self._act_fun.f(np.dot(input_, self._weights[i]))
+
+                debugDimensions()
+
+                # Output of current layer is now input for next layer
+                input_ = o_l
+                o.append(o_l)
+
+        # Return the last element of our output vectors, this is the last layer (output layer)
+        return o[-1]
 
     def _train_pattern(self, input_: np.array, target: np.array, lr: float, momentum: float, decay: float):
         """
