@@ -149,18 +149,30 @@ class MultiLayerANN:
         for delta, last_delta, weights, net_inputs in zip(reversed(self._deltas[0:-1]), reversed(self._deltas[1:]),
                                                           reversed(self._weights[1:]),
                                                           reversed(self._net_inputs[0:-1])):
-            self._deltas[self._deltas.index(delta)] = self._act_fun.d(net_inputs[0:-1]) * (last_delta.T * weights[0:-1]).T
+            # TODO rewrite forumla to match assignment
+            #self._deltas[self._deltas.index(delta)] = self._act_fun.d(net_inputs[0:-1]) * (weights[0:-1] * np.matrix(last_delta).T)
+            print(np.matrix(net_inputs[0:-1]).shape)
+            print(np.matrix(last_delta).shape)
+            print(weights[0:-1].shape)
+            print("----")
+            #self._deltas[self._deltas.index(delta)] = np.matrix(self._act_fun.d(net_inputs[0:-1])) * (np.matrix(last_delta) * weights[0:-1]).T
+
+        print(np.matrix(self._deltas[0]).shape)
+        #print(self._weights_deltas[0].shape)
 
         # TODO compute weight update
         # add input layer activations to activations and ignore output layer activations
         act_with_input = [input_] + self._activations[0:-1]
         # apply the weight matrice to our input vector, ignore bias neuron
-        act_with_input[0] = np.dot(input_, self._weights[0][0:-1])
         for weights_layer, weight_deltas_layer, activation_layer, delta_layer in zip(self._weights,
                                                                                      self._weights_deltas,
                                                                                      act_with_input, self._deltas):
-            print("Weights: {}, act: {}, delta: {}".format(weights_layer[0:-1].shape, activation_layer.shape, delta_layer.T.shape))
-            self._weights_deltas[self._weights_deltas.index(weight_deltas_layer)] = lr * (activation_layer * delta_layer.T).T
+            #print(np.matrix(activation_layer).shape)
+            #print(np.matrix(delta_layer).shape)
+            #print(weight_deltas_layer.shape)
+            #print("Weights: {}, act: {}, delta: {}".format(weights_layer[0:-1].shape, activation_layer.shape, delta_layer.T.shape))
+            #print(self._weights_deltas.index(weight_deltas_layer))
+            #self._weights_deltas[self._weights_deltas.index(weight_deltas_layer)] = lr * (np.matrix(activation_layer).T * np.matrix(delta_layer))
             pass
 
     def train(self, inputs: [np.array], targets: [np.array], epochs: int, lr: float, momentum: float,
@@ -190,7 +202,6 @@ class MultiLayerANN:
             print("epoch: {0:d}   error: {1:f}".format(epoch, float(error)))
 
         print("final error: {0:f}".format(float(errors[-1])))
-
         # evaluate the prediction
         correct_predictions = 0
         for input_, target in zip(inputs, targets):
