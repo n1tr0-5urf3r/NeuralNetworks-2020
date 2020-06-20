@@ -146,20 +146,21 @@ class MultiLayerANN:
         self._deltas[-1] = self._act_fun.d(self._net_inputs[-1]) * (target - self._activations[-1])
         # - then compute hidden layer deltas, consider that no delta is needed for the bias neuron
         #   Note: self._deltas[0:-1] = ignore last delta
-        for i in range(1, len(self._layer_dimensions) - 1):
-            self._deltas[-i-1] = self._act_fun.d(self._net_inputs[-i-1])[0:-1] * (self._deltas[-i].T * self._weights[-i])[0:-1].T
-
         for delta, last_delta, weights, net_inputs in zip(reversed(self._deltas[0:-1]), reversed(self._deltas[1:]),
                                                           reversed(self._weights[1:]),
                                                           reversed(self._net_inputs[0:-1])):
-            pass
+            self._deltas[self._deltas.index(delta)] = self._act_fun.d(net_inputs[0:-1]) * (last_delta.T * weights[0:-1]).T
 
         # TODO compute weight update
         # add input layer activations to activations and ignore output layer activations
         act_with_input = [input_] + self._activations[0:-1]
+        # apply the weight matrice to our input vector, ignore bias neuron
+        act_with_input[0] = np.dot(input_, self._weights[0][0:-1])
         for weights_layer, weight_deltas_layer, activation_layer, delta_layer in zip(self._weights,
                                                                                      self._weights_deltas,
                                                                                      act_with_input, self._deltas):
+            print("Weights: {}, act: {}, delta: {}".format(weights_layer[0:-1].shape, activation_layer.shape, delta_layer.T.shape))
+            self._weights_deltas[self._weights_deltas.index(weight_deltas_layer)] = lr * (activation_layer * delta_layer.T).T
             pass
 
     def train(self, inputs: [np.array], targets: [np.array], epochs: int, lr: float, momentum: float,
