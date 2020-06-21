@@ -110,25 +110,23 @@ class MultiLayerANN:
         :return: activation of the output layer
         """
 
-        # self._layer_dimensions consists of a tuple of length of vector per layer
-
-        # Calculate the first (input) layer with identity function and its weights
+        # Calculate the first (input) layer with identity function, bias and its weights
         input_ = np.append(input_, self.BIAS_ACTIVATION)
-        self._net_inputs[0] = np.dot(input_, self._weights[0])
+        output = np.dot(input_, self._weights[0])
+        self._net_inputs[0] = output
 
         # Calculate outputs for each hidden layer
-        # Start from i=1 as we already calculated the input layer,
         # Go 'till dimensions - 1 as the output layer will be calculated outside separatly
-        for i in range(1, len(self._layer_dimensions) - 1):
-            # Add bias neuron to input vector
-            self._net_inputs[i-1] = np.append(self._net_inputs[i-1], self.BIAS_ACTIVATION)
-            self._net_inputs[i] = np.dot(self._net_inputs[i-1], self._weights[i])
-
+        for i in range(0, len(self._activations) - 1):
+            # Add bias neuron to previous output vector
+            output = np.append(output, self.BIAS_ACTIVATION)
+            output = self._act_fun.f(np.dot(output, self._weights[i+1]))
+            self._net_inputs[i+1] = output
             # Output of current layer is now input for next layer
             self._activations[i] = self._act_fun.f(self._net_inputs[i])
 
-        # Calculate the activation function of our output layer and return it
-        self._activations[-1] = self._act_fun.f(self._activations[-1])
+        # Calculate output layer
+        self._activations[-1] = self._act_fun.f(output)
         return self._activations[-1]
 
     def _train_pattern(self, input_: np.array, target: np.array, lr: float, momentum: float, decay: float):
@@ -149,16 +147,7 @@ class MultiLayerANN:
         for delta, last_delta, weights, net_inputs in zip(reversed(self._deltas[0:-1]), reversed(self._deltas[1:]),
                                                           reversed(self._weights[1:]),
                                                           reversed(self._net_inputs[0:-1])):
-            # TODO rewrite forumla to match assignment
-            #self._deltas[self._deltas.index(delta)] = self._act_fun.d(net_inputs[0:-1]) * (weights[0:-1] * np.matrix(last_delta).T)
-            print(np.matrix(net_inputs[0:-1]).shape)
-            print(np.matrix(last_delta).shape)
-            print(weights[0:-1].shape)
-            print("----")
-            #self._deltas[self._deltas.index(delta)] = np.matrix(self._act_fun.d(net_inputs[0:-1])) * (np.matrix(last_delta) * weights[0:-1]).T
-
-        print(np.matrix(self._deltas[0]).shape)
-        #print(self._weights_deltas[0].shape)
+            self._deltas[self._deltas.index(delta)] = self._act_fun.d(net_inputs) * np.dot(weights[0:-1], last_delta)
 
         # TODO compute weight update
         # add input layer activations to activations and ignore output layer activations
@@ -167,13 +156,15 @@ class MultiLayerANN:
         for weights_layer, weight_deltas_layer, activation_layer, delta_layer in zip(self._weights,
                                                                                      self._weights_deltas,
                                                                                      act_with_input, self._deltas):
-            #print(np.matrix(activation_layer).shape)
-            #print(np.matrix(delta_layer).shape)
-            #print(weight_deltas_layer.shape)
-            #print("Weights: {}, act: {}, delta: {}".format(weights_layer[0:-1].shape, activation_layer.shape, delta_layer.T.shape))
-            #print(self._weights_deltas.index(weight_deltas_layer))
-            #self._weights_deltas[self._weights_deltas.index(weight_deltas_layer)] = lr * (np.matrix(activation_layer).T * np.matrix(delta_layer))
-            pass
+            newDeltaMatrix = lr * (np.outer(activation_layer, delta_layer))
+            # Apply row of zeros for no weight change with bias neuron and to match dimensions
+            newDeltaMatrix = np.vstack([newDeltaMatrix, np.zeros(newDeltaMatrix.shape[1])])
+            #print(newDeltaMatrix)
+            #print("---------------")
+            self._weights_deltas[self._weights_deltas.index(weight_deltas_layer)] = newDeltaMatrix
+            # Update weight matrix
+            self._weights[self._weights.index(weights_layer)] = weights_layer + newDeltaMatrix
+
 
     def train(self, inputs: [np.array], targets: [np.array], epochs: int, lr: float, momentum: float,
               decay: float) -> list:
