@@ -119,14 +119,13 @@ class MultiLayerANN:
         # Go 'till dimensions - 1 as the output layer will be calculated outside separatly
         for i in range(0, len(self._activations) - 1):
             # Add bias neuron to previous output vector
-            output = np.append(output, self.BIAS_ACTIVATION)
-            output = self._act_fun.f(np.dot(output, self._weights[i+1]))
-            self._net_inputs[i+1] = output
-            # Output of current layer is now input for next layer
-            self._activations[i] = self._act_fun.f(self._net_inputs[i])
+            output = self._act_fun.f(output)
+            self._activations[i] = output
+            newNetInput = np.append(output, self.BIAS_ACTIVATION)
+            self._net_inputs[i+1] = np.dot(newNetInput, self._weights[i+1])
 
         # Calculate output layer
-        self._activations[-1] = self._act_fun.f(output)
+        self._activations[-1] = self._act_fun.f(self._net_inputs[-1])
         return self._activations[-1]
 
     def _train_pattern(self, input_: np.array, target: np.array, lr: float, momentum: float, decay: float):
@@ -147,20 +146,18 @@ class MultiLayerANN:
         for delta, last_delta, weights, net_inputs in zip(reversed(self._deltas[0:-1]), reversed(self._deltas[1:]),
                                                           reversed(self._weights[1:]),
                                                           reversed(self._net_inputs[0:-1])):
-            self._deltas[self._deltas.index(delta)] = self._act_fun.d(net_inputs) * np.dot(weights[0:-1], last_delta)
+            newDelta = self._act_fun.d(net_inputs) * np.dot(weights[0:-1], last_delta)
+            self._deltas[self._deltas.index(delta)] = newDelta
 
-        # TODO compute weight update
         # add input layer activations to activations and ignore output layer activations
         act_with_input = [input_] + self._activations[0:-1]
         # apply the weight matrice to our input vector, ignore bias neuron
         for weights_layer, weight_deltas_layer, activation_layer, delta_layer in zip(self._weights,
                                                                                      self._weights_deltas,
                                                                                      act_with_input, self._deltas):
-            newDeltaMatrix = lr * (np.outer(activation_layer, delta_layer))
-            # Apply row of zeros for no weight change with bias neuron and to match dimensions
+            newDeltaMatrix = lr * (np.outer(activation_layer, delta_layer)) + momentum * weight_deltas_layer[0:-1]
             newDeltaMatrix = np.vstack([newDeltaMatrix, np.zeros(newDeltaMatrix.shape[1])])
-            #print(newDeltaMatrix)
-            #print("---------------")
+            # Apply row of zeros for no weight change with bias neuron and to match dimensions
             self._weights_deltas[self._weights_deltas.index(weight_deltas_layer)] = newDeltaMatrix
             # Update weight matrix
             self._weights[self._weights.index(weights_layer)] = weights_layer + newDeltaMatrix
@@ -224,11 +221,14 @@ def main():
     parser = argparse.ArgumentParser("MultiLayerANN")
     parser.add_argument('--inputs', type=str, default='digits-input.txt')
     parser.add_argument('--outputs', type=str, default='digits-target.txt')
-    parser.add_argument('--epochs', type=int, default=100)
+    #parser.add_argument('--inputs', type=str, default='evenParity_input.txt')
+    #parser.add_argument('--outputs', type=str, default='evenParity_target.txt')
+    parser.add_argument('--epochs', type=int, default=50)
     parser.add_argument('--lr', type=float, default=0.1, help='learning rate')
-    parser.add_argument('--momentum', type=float, default=0.0, help='momentum')
+    parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
     parser.add_argument('--decay', type=float, default=0.0, help='weight decay')
     parser.add_argument('--activation', type=str, default='sigmoid', help='sigmoid or tanh')
+    #parser.add_argument('--activation', type=str, default='tanh', help='sigmoid or tanh')
     args = parser.parse_args()
 
     # or be lazy, don't pass runtime args and change them here, e.g.
@@ -242,7 +242,7 @@ def main():
     fun = Sigmoid if args.activation.lower() == 'sigmoid' else TanH
     num_outputs = 1 if isinstance(targets[0], float) else targets.shape[1]
 
-    net = MultiLayerANN(fun, input_vectors.shape[1], 15, num_outputs)
+    net = MultiLayerANN(fun, input_vectors.shape[1], 20, num_outputs)
     errors = net.train(input_vectors, targets, args.epochs, args.lr, args.momentum, args.decay)
 
     plt.plot(errors, 'r')
