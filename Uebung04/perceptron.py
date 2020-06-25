@@ -91,7 +91,7 @@ class Perceptron:
                 input_vectors[0,:] is the first training vector, input_vectors[1,:] the second...
         :param targets: target outputs. targets[0] is the  desired output
                 for the first training vector.
-        :param epochs: Number of epochs. 
+        :param epochs: Number of epochs.
         :param lr: the learning rate of the perceptron learning rule
         :return: average error rate for every epoch
         """
@@ -103,12 +103,14 @@ class Perceptron:
             for j in range(0, input_vectors.shape[0]):
                 iterations += 1
                 self._train_pattern(input_vectors[j, :], targets[j], lr)
+                # split training and predition in two loops
+                # first train all input then predict all
                 result = self.predict(input_vectors[j, :])
                 if result != targets[j]:
                     errorcount += 1
             error_rates.append(errorcount/iterations)
 
-        #return [0]*iterations
+        # return [0]*iterations
         return error_rates
 
 
