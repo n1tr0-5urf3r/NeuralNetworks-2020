@@ -2,3 +2,6 @@
 *.zip
 .idea
 __pycache__
+uebung04/*
+uebung05/*
+uebung07/*

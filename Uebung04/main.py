@@ -64,11 +64,28 @@ def main(argv,threshold):
         print("Oh no, not correctly learned the dataset ",argv[1])
 
 if __name__ == "__main__":
-    main(["","aImpliesbinput.txt","aImpliesboutput.txt","1000", "0.001"],0.1);
-    main(["","xnorinput.txt","xnoroutput.txt","1000", "0.001"],0.3);
-    main(["","test1input.txt","test1output.txt","100", "0.001"],0.1);
+   # main(["","aImpliesbinput.txt","aImpliesboutput.txt","1000", "0.001"],0.1);
+   # main(["","xnorinput.txt","xnoroutput.txt","1000", "0.001"],0.3);
+   # main(["","test1input.txt","test1output.txt","100", "0.001"],0.1);
+   # main(["", "test1input.txt", "test1output.txt", "100", "0.001"], 0.1);
 
-    # Please uncomment the following lines to check learning and epoch relationship for different combinations
-    calculate_relationship_table(["","aImpliesbinput.txt","aImpliesboutput.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
-    calculate_relationship_table(["","xnorinput.txt","xnoroutput.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
-    calculate_relationship_table(["","test1input.txt","test1output.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
+
+   #main(["","aImpliesbinput.txt","aImpliesboutput.txt","10000", "0.0001"],0.1);
+   #main(["","aImpliesbinput.txt","aImpliesboutput.txt","100", "0.01"],0.1);
+   #main(["","aImpliesbinput.txt","aImpliesboutput.txt","10000", "0.1"],0.1);
+   #main(["","aImpliesbinput.txt","aImpliesboutput.txt","10", "0.1"],0.1);
+
+   #main(["","xnorinput.txt","xnoroutput.txt","10000", "0.0001"],0.3);
+   #main(["","xnorinput.txt","xnoroutput.txt","100", "0.01"],0.3);
+   main(["","xnorinput.txt","xnoroutput.txt","10000", "0.1"],0.3);
+   main(["","xnorinput.txt","xnoroutput.txt","10", "0.1"],0.3);
+
+   main(["","test1input.txt","test1output.txt","1000", "0.0001"],0.1);
+   main(["", "test1input.txt", "test1output.txt", "100", "0.01"], 0.1);
+   main(["", "test1input.txt", "test1output.txt", "1000", "0.1"], 0.1);
+   main(["", "test1input.txt", "test1output.txt", "10", "0.1"], 0.1);
+
+# Please uncomment the following lines to check learning and epoch relationship for different combinations
+    #calculate_relationship_table(["","aImpliesbinput.txt","aImpliesboutput.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
+    #calculate_relationship_table(["","xnorinput.txt","xnoroutput.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
+    #calculate_relationship_table(["","test1input.txt","test1output.txt"],[1e-1, 1e-2, 1e-3, 1e-4],[100, 250, 500, 1000])
