@@ -34,8 +34,11 @@ def L1_loss(y_true, y_pred):
     :return:
         sum of absolute difference between true and predicted values
     """
-    # implement me
-    return 0
+    n = y_pred.shape[0]
+    sum = 0
+    for i in range(n):
+        sum += np.abs(y_true[i]- y_pred[i])
+    return sum
 
 class RBF(object):
     def __init__(self, w):
@@ -117,32 +120,38 @@ if __name__ == "__main__":
     # now  first generate f (x) and then add 
     # random noise sampled uniformly from the range [−0.2, 0.2] to each of the 10 values
     # using output_func and target_func
+    # Generate f(x)
+
+    # TODO: irgendwas stimmt mit xtrain, ytrain glaub noch nicht
+    xtrain = output_func(xtrain)
+    xtrain = target_func(xtrain, 0.2)
 
     #ytrain is the target lable, i.e. f(x)+random_noise
+    ytrain = xtrain
 
     # test data and labels...
     xtest = np.linspace(-4, 6, num=100)
-    # Task c)
-    # Generate f(x)
-    ytest = output_func(xtest)
+    ytest = output_func(xtest)    # Task c)
+
     # Add random noise
-    ytest = target_func(ytest, 0.2)
 
 #    # plot training and test curves...
-#    plt.figure()
-#    plt.plot(xtest, ytest)  # plot test data
-#    plt.plot(xtrain, ytrain, 'o')  # plot training data
-#    plt.xlabel('x')
-#    plt.ylabel('f(x)')
-    # plt.show()
+    plt.figure()
+    plt.plot(xtest, ytest)  # plot test data
+    plt.plot(xtrain, ytrain, 'o')  # plot training data
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.show()
 
     # TODO train RBF network by calling evaluate_rbf function
     # Train three diffferent networks using 3 different
     # set of weights and then plot them on a single plot 
 
-    rbf = RBF(np.array([-4,-3,-2,-1]))
-    rbf.train(xtest,ytest)
-    print(rbf.predict(4))
+    rbf1 = RBF(np.array([-4,-3,-2,-1]))
+    rbf2 = RBF(np.array([2,3,4,5]))
+    rbf3 = RBF(np.array([-4,-2,2,5]))
+
+    evaluate_rbf(xtrain, ytrain, xtest, ytest, [-4,-3,-2,-1])
 
     # HINT: To have a single plot on the same figure
     # call plt.show only once at the end of plotting
