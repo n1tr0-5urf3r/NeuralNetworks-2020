@@ -61,8 +61,8 @@ class RBF(object):
         k = w.shape[0]
         n = x.shape[0]
         output = np.zeros((n, k))
-        for i in range(output.shape[0]):
-            for j in range(output.shape[1]):
+        for i in range(n):
+            for j in range(k):
                 output[i][j] = np.exp(-(x[i]-w[j])**2)/2
         return output
 
@@ -121,17 +121,14 @@ if __name__ == "__main__":
     # random noise sampled uniformly from the range [−0.2, 0.2] to each of the 10 values
     # using output_func and target_func
     # Generate f(x)
-
-    # TODO: irgendwas stimmt mit xtrain, ytrain glaub noch nicht
-    xtrain = output_func(xtrain)
-    xtrain = target_func(xtrain, 0.2)
+    fx = output_func(xtrain)
 
     #ytrain is the target lable, i.e. f(x)+random_noise
-    ytrain = xtrain
+    ytrain = target_func(fx, 0.2)
 
     # test data and labels...
     xtest = np.linspace(-4, 6, num=100)
-    ytest = output_func(xtest)    # Task c)
+    ytest = output_func(xtest)  
 
     # plot training and test curves...
     plt.figure()
@@ -148,10 +145,8 @@ if __name__ == "__main__":
     evaluate_rbf(xtrain, ytrain, xtest, ytest, [-4,-3,-2,-1])
     evaluate_rbf(xtrain, ytrain, xtest, ytest,[2,3,4,5])
     evaluate_rbf(xtrain, ytrain, xtest, ytest,[-4,-2,2,5])
-    plt.show()
-
 
     # HINT: To have a single plot on the same figure
     # call plt.show only once at the end of plotting
     # all the plots.
-    
+    plt.show()
