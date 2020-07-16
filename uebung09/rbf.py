@@ -11,8 +11,8 @@ def output_func(x):
     :param x: a 1x1 or Nx1 input vector
     :return: cos(x)+0.5x
     """
-    # implement me
-    return 0
+    yx = lambda x: np.cos(x) + 0.5*x
+    return yx(x)
 
 
 def target_func(y, std):
@@ -22,8 +22,8 @@ def target_func(y, std):
     :param std: standard dev for rand function
     :return: y_i + rand(-std,std)
     """
-    # implement me
-    return 0
+    noise = np.linspace(-std,std,y.shape[0])
+    return y + noise
 
 def L1_loss(y_true, y_pred):
     """
