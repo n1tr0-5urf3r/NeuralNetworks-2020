@@ -113,14 +113,18 @@ if __name__ == "__main__":
 
     # test data and labels...
     xtest = np.linspace(-4, 6, num=100)
+    # Task c)
+    # Generate f(x)
     ytest = output_func(xtest)
+    # Add random noise
+    ytest = target_func(ytest, 0.2)
 
-    # plot training and test curves...
-    plt.figure()
-    plt.plot(xtest, ytest)  # plot test data
-    plt.plot(xtrain, ytrain, 'o')  # plot training data
-    plt.xlabel('x')
-    plt.ylabel('f(x)')
+#    # plot training and test curves...
+#    plt.figure()
+#    plt.plot(xtest, ytest)  # plot test data
+#    plt.plot(xtrain, ytrain, 'o')  # plot training data
+#    plt.xlabel('x')
+#    plt.ylabel('f(x)')
     # plt.show()
 
     # TODO train RBF network by calling evaluate_rbf function
