@@ -22,8 +22,9 @@ def target_func(y, std):
     :param std: standard dev for rand function
     :return: y_i + rand(-std,std)
     """
-    noise = np.linspace(-std,std,y.shape[0])
-    return y + noise
+    for i in range(y.shape[0]):
+        y[i] = y[i] + np.random.uniform(-std, std)
+    return y
 
 def L1_loss(y_true, y_pred):
     """
