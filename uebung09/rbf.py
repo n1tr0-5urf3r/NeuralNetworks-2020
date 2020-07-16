@@ -108,7 +108,7 @@ def evaluate_rbf(xtrain, ytrain, xtest, ytest, w):
     print(f"xtest:{xtest[:5]},ypred:{ypred[:5]}")
     print(f"Learned RBF coefficients = {rbf.c}")
     print(f"L1 Loss = {L1_loss(ypred, ytest)}")
-    # plt.plot(ypred)
+    plt.plot(ypred)
     # plt.show()
     return ypred
 
@@ -133,25 +133,23 @@ if __name__ == "__main__":
     xtest = np.linspace(-4, 6, num=100)
     ytest = output_func(xtest)    # Task c)
 
-    # Add random noise
-
-#    # plot training and test curves...
+    # plot training and test curves...
     plt.figure()
     plt.plot(xtest, ytest)  # plot test data
     plt.plot(xtrain, ytrain, 'o')  # plot training data
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.show()
+    #plt.show()
 
-    # TODO train RBF network by calling evaluate_rbf function
+    # train RBF network by calling evaluate_rbf function
     # Train three diffferent networks using 3 different
     # set of weights and then plot them on a single plot 
 
-    rbf1 = RBF(np.array([-4,-3,-2,-1]))
-    rbf2 = RBF(np.array([2,3,4,5]))
-    rbf3 = RBF(np.array([-4,-2,2,5]))
-
     evaluate_rbf(xtrain, ytrain, xtest, ytest, [-4,-3,-2,-1])
+    evaluate_rbf(xtrain, ytrain, xtest, ytest,[2,3,4,5])
+    evaluate_rbf(xtrain, ytrain, xtest, ytest,[-4,-2,2,5])
+    plt.show()
+
 
     # HINT: To have a single plot on the same figure
     # call plt.show only once at the end of plotting
