@@ -55,8 +55,13 @@ class RBF(object):
         :return:
                  N x K  :
         """
-        # implement me
-        return 0
+        k = w.shape[0]
+        n = x.shape[0]
+        output = np.zeros((n, k))
+        for i in range(output.shape[0]):
+            for j in range(output.shape[1]):
+                output[i][j] = np.exp(-(x[i]-w[j])**2)/2
+        return output
 
     def train(self, x, y):
         """
@@ -131,6 +136,8 @@ if __name__ == "__main__":
     # Train three diffferent networks using 3 different
     # set of weights and then plot them on a single plot 
 
+    rbf = RBF(np.array([-4,-3,-2,-1]))
+    print(rbf.neurons_output(ytest, rbf.w))
 
     # HINT: To have a single plot on the same figure
     # call plt.show only once at the end of plotting
