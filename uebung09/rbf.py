@@ -72,8 +72,8 @@ class RBF(object):
         """
         output = self.neurons_output(x, self.w)
         pseudoinverse = np.linalg.pinv(output)
-        c = np.dot(pseudoinverse, y)
-        return c
+        self.c = np.dot(pseudoinverse, y)
+        return self.c
     
 
     def predict(self, x):
@@ -83,8 +83,10 @@ class RBF(object):
         :param x: input x: (Nx1)
         :return: Kx1 predicted f(x) for each value...
         """
-        # implement me
-        return 0
+        sum = 0
+        for i in range(self.c.shape[0]):
+            sum += c[i]*np.exp(-((x-w[i])**2)/2)
+        return sum
 
 
 def evaluate_rbf(xtrain, ytrain, xtest, ytest, w):
