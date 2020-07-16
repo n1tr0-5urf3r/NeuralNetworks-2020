@@ -70,8 +70,10 @@ class RBF(object):
         :param y: output y to predict : (Nx1)
         :return:
         """
-        # implement me
-        pass
+        output = self.neurons_output(x, self.w)
+        pseudoinverse = np.linalg.pinv(output)
+        c = np.dot(pseudoinverse, y)
+        return c
     
 
     def predict(self, x):
@@ -137,7 +139,7 @@ if __name__ == "__main__":
     # set of weights and then plot them on a single plot 
 
     rbf = RBF(np.array([-4,-3,-2,-1]))
-    print(rbf.neurons_output(ytest, rbf.w))
+    print(rbf.train(xtest,ytest))
 
     # HINT: To have a single plot on the same figure
     # call plt.show only once at the end of plotting
