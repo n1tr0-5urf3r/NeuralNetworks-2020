@@ -85,7 +85,7 @@ class RBF(object):
         """
         sum = 0
         for i in range(self.c.shape[0]):
-            sum += c[i]*np.exp(-((x-w[i])**2)/2)
+            sum += self.c[i]*np.exp(-((x-self.w[i])**2)/2)
         return sum
 
 
@@ -141,7 +141,8 @@ if __name__ == "__main__":
     # set of weights and then plot them on a single plot 
 
     rbf = RBF(np.array([-4,-3,-2,-1]))
-    print(rbf.train(xtest,ytest))
+    rbf.train(xtest,ytest)
+    print(rbf.predict(4))
 
     # HINT: To have a single plot on the same figure
     # call plt.show only once at the end of plotting
