@@ -108,7 +108,7 @@ def evaluate_rbf(xtrain, ytrain, xtest, ytest, w):
     print(f"xtest:{xtest[:5]},ypred:{ypred[:5]}")
     print(f"Learned RBF coefficients = {rbf.c}")
     print(f"L1 Loss = {L1_loss(ypred, ytest)}")
-    plt.plot(ypred)
+    plt.plot(xtest, ypred)
     # plt.show()
     return ypred
 
@@ -136,7 +136,7 @@ if __name__ == "__main__":
     plt.plot(xtrain, ytrain, 'o')  # plot training data
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    #plt.show()
+   # plt.show()
 
     # train RBF network by calling evaluate_rbf function
     # Train three diffferent networks using 3 different
