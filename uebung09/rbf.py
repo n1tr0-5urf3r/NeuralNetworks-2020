@@ -33,11 +33,8 @@ def L1_loss(y_true, y_pred):
     :return:
         sum of absolute difference between true and predicted values
     """
-    n = y_pred.shape[0]
-    sum = 0
-    for i in range(n):
-        sum += np.abs(y_true[i]- y_pred[i])
-    return sum
+    loss = sum(abs(y_true - y_pred))
+    return loss
 
 class RBF(object):
     def __init__(self, w):
