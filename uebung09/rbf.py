@@ -11,8 +11,7 @@ def output_func(x):
     :param x: a 1x1 or Nx1 input vector
     :return: cos(x)+0.5x
     """
-    yx = lambda x: np.cos(x) + 0.5*x
-    return yx(x)
+    return np.cos(x) + 0.5*x
 
 
 def target_func(y, std):
@@ -73,11 +72,10 @@ class RBF(object):
         :param y: output y to predict : (Nx1)
         :return:
         """
-        output = self.neurons_output(x, self.w)
-        pseudoinverse = np.linalg.pinv(output)
+        h = self.neurons_output(x, self.w)
+        pseudoinverse = np.linalg.pinv(h)
         self.c = np.dot(pseudoinverse, y)
-        return self.c
-    
+        return
 
     def predict(self, x):
         """
@@ -108,6 +106,8 @@ def evaluate_rbf(xtrain, ytrain, xtest, ytest, w):
     print(f"xtest:{xtest[:5]},ypred:{ypred[:5]}")
     print(f"Learned RBF coefficients = {rbf.c}")
     print(f"L1 Loss = {L1_loss(ypred, ytest)}")
+    #plt.plot(ypred)
+    # We changed this plot to match the xtest values on our x-axis
     plt.plot(xtest, ypred)
     # plt.show()
     return ypred
